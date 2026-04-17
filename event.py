@@ -1,6 +1,8 @@
 class Event:
     def __init__(self, event_id, message, event_type, event_time):
-        self.event_id = event_id
+        self.event_id = Event.next_id
+        Event.next_id += 1
+        
         self.message = message
         self.event_type = event_type
         self.event_time = event_time

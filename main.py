@@ -8,9 +8,13 @@ def test_message():
 
     msg1 = Message(1, 0, 0.5)
     msg2 = Message(2, 0, 1.0)
+    msg3 = Message(2, 0, 1.5)
+    msg4 = Message(4, 0, 2.0)
 
     msg1.print_message()
     msg2.print_message()
+    msg3.print_message()
+    msg4.print_message()
 
     print("Message 1 ID:", msg1.get_id())
     print("Message 1 source:", msg1.get_source())
@@ -25,6 +29,7 @@ def test_event():
 
     msg = Message(1, 0, 0.5)
     event = Event(1, msg, "SEND_MSG", 0.5)
+    event = Event(2, msg, "RECV_MSG", 1.0)
 
     event.print_event()
 
