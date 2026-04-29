@@ -28,19 +28,24 @@ def test_event():
     print("=== TEST EVENT ===")
 
     msg = Message(1, 0, 0.5)
-    event = Event(1, msg, "SEND_MSG", 0.5)
-    event = Event(2, msg, "RECV_MSG", 1.0)
 
-    event.print_event()
+    event1 = Event(msg, "SEND_MSG", 0.5)
+    event2 = Event(msg, "RECV_MSG", 1.0)
 
-    print("Event Time:", event.get_event_time())
-    print("Event Type:", event.get_event_type())
+    event1.print_event()
+    event2.print_event()
+
+    print("Event 1 Time:", event1.get_event_time())
+    print("Event 1 Type:", event1.get_event_type())
+
+    print("Event 2 Time:", event2.get_event_time())
+    print("Event 2 Type:", event2.get_event_type())
 
     print()
 
 
 def generate_trace(event, node):
-    message = event.message
+    message = event.get_message()
 
     event_label = event.get_event_type()
 
@@ -69,12 +74,12 @@ def test_scheduler():
     msg1 = Message(1, 0, 1.202)
     msg2 = Message(3, 0, 2.320)
 
-    event1 = Event(1, msg1, "SEND_MSG", 1.202)
-    event2 = Event(2, msg1, "RECV_MSG", 1.916)
-    event3 = Event(3, msg2, "SEND_MSG", 2.320)
-    event4 = Event(4, msg2, "RECV_MSG", 2.391)
-    event5 = Event(5, msg1, "MSG_DEPT", 4.572)
-    event6 = Event(6, msg2, "MSG_DEPT", 5.916)
+    event1 = Event(msg1, "SEND_MSG", 1.202)
+    event2 = Event(msg1, "RECV_MSG", 1.916)
+    event3 = Event(msg2, "SEND_MSG", 2.320)
+    event4 = Event(msg2, "RECV_MSG", 2.391)
+    event5 = Event(msg1, "MSG_DEPT", 4.572)
+    event6 = Event(msg2, "MSG_DEPT", 5.916)
 
     scheduler.add_event(event5)
     scheduler.add_event(event3)
@@ -87,11 +92,12 @@ def test_scheduler():
 
     while True:
         event = scheduler.get_event()
+
         if event is None:
             break
 
         if event.get_event_type() == "SEND_MSG":
-            node = event.message.get_source()
+            node = event.get_message().get_source()
         else:
             node = 0
 
