@@ -1,6 +1,10 @@
 from message import Message
 from event import Event
 from scheduler import Scheduler
+from client import Client
+from queue import Queue
+from server import Server
+from gateway import Gateway
 
 
 def test_message():
@@ -106,12 +110,122 @@ def test_scheduler():
     print("Current Time:", scheduler.get_current_time())
     print()
 
+def test_client():
+    print("=== TEST CLIENT ===")
 
+    client = Client(0, 4)  # destination=0, lambda=4
+
+    client.print_client()
+
+    current_time = 0.0
+
+    for _ in range(5):
+        event = client.generate_event(current_time)
+        current_time = event.get_event_time()
+        event.print_event()
+
+    print()
+
+def test_queue():
+    print("=== TEST QUEUE ===")
+
+    q = Queue()
+
+    msg1 = Message(1, 0, 0.5)
+    msg2 = Message(2, 0, 1.0)
+    msg3 = Message(3, 0, 1.5)
+
+    q.enqueue(msg1)
+    q.enqueue(msg2)
+    q.enqueue(msg3)
+
+    print("Queue size:", q.size())
+
+    print("Front message:")
+    front = q.peek()
+    if front:
+        front.print_message()
+
+    removed = q.dequeue()
+
+    print("Removed message:")
+    if removed:
+        removed.print_message()
+
+    print("Queue size after dequeue:", q.size())
+
+    print()
+    
+def print_server_state(server):
+    if server.is_busy():
+        print("Server state: BUSY")
+    else:
+        print("Server state: IDLE")
+    
+    
+def test_server():
+    print("=== TEST SERVER ===")
+
+    server = Server()
+
+    msg1 = Message(1, 0, 0.5)
+
+    print_server_state(server)
+
+    started = server.start_service(msg1)
+    if started:
+        print("Server started processing:")
+        msg1.print_message()
+
+    print_server_state(server)
+
+    finished_msg = server.end_service()
+
+    if finished_msg:
+        print("Server finished processing:")
+        finished_msg.print_message()
+
+    print_server_state(server)
+
+    print()
+    
+def test_gateway():
+    print("=== TEST GATEWAY ===")
+
+    gateway = Gateway()
+
+    msg1 = Message(1, 0, 0.5)
+    msg2 = Message(2, 0, 1.0)
+    msg3 = Message(3, 0, 1.5)
+
+    gateway.receive_message(msg1)
+    gateway.receive_message(msg2)
+    gateway.receive_message(msg3)
+
+    gateway.complete_service()
+    gateway.complete_service()
+    gateway.complete_service()
+
+    print()
+
+    
 def main():
     test_message()
     test_event()
     test_scheduler()
+    test_client()
+    test_queue()
+    test_server()
+    test_gateway()
 
 
 if __name__ == "__main__":
     main()
+    
+    
+    
+    
+    
+    
+    
+
